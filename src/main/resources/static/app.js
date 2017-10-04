@@ -40,10 +40,14 @@ var app = (function () {
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpoint.'+id, function (eventbody) {
-                        ctx.beginPath();
-                        ctx.arc(JSON.parse(eventbody.body).x, JSON.parse(eventbody.body).y, 1, 0, 2 * Math.PI);
-                        ctx.stroke();
-                        ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(JSON.parse(eventbody.body).x, JSON.parse(eventbody.body).y, 1, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+            });
+            stompClient.subscribe('/topic/newpolygon.'+id, function (eventbody) {
+                ctx.beginPath();
+                
             });
         });
         
@@ -63,7 +67,7 @@ var app = (function () {
                     var x = parseInt(event.pageX) - parseInt(rect.left);
                     var y = parseInt(event.pageY) - parseInt(rect.top);
                     var pt = new Point(x,y);
-                    stompClient.send("/topic/newpoint."+id, {}, JSON.stringify(pt)); 
+                    stompClient.send("/app/newpoint."+id, {}, JSON.stringify(pt)); 
                 });
         }
         },
@@ -72,7 +76,7 @@ var app = (function () {
             var pt=new Point(px,py);
             console.info("publishing point at "+pt);
             addPointToCanvas(pt);
-            stompClient.send("/topic/newpoint", {}, JSON.stringify(pt)); 
+            stompClient.send("/app/newpoint", {}, JSON.stringify(pt)); 
             //publicar el evento
         },
 
