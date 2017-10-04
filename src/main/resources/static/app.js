@@ -11,6 +11,7 @@ var app = (function () {
     var can = null;
     var rect = null;
     var ctx = null;
+    var id = 0;
     var addPointToCanvas = function (point) {        
         var canvas = document.getElementById("canvas");
         var ctx = canvas.getContext("2d");
@@ -38,7 +39,7 @@ var app = (function () {
         //subscribe to /topic/TOPICXX when connections succeed
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/newpoint', function (eventbody) {
+            stompClient.subscribe('/topic/newpoint.'+id, function (eventbody) {
                         ctx.beginPath();
                         ctx.arc(JSON.parse(eventbody.body).x, JSON.parse(eventbody.body).y, 1, 0, 2 * Math.PI);
                         ctx.stroke();
@@ -57,15 +58,12 @@ var app = (function () {
             rect = can.getBoundingClientRect();
             ctx = can.getContext("2d");
             //websocket connection
-            connectAndSubscribe();
-            
                 if (window.PointerEvent) {
-        
                 can.addEventListener("pointerdown", function(event){
                     var x = parseInt(event.pageX) - parseInt(rect.left);
-                        var y = parseInt(event.pageY) - parseInt(rect.top);
-                        var pt = new Point(x,y);
-                        stompClient.send("/topic/newpoint", {}, JSON.stringify(pt)); 
+                    var y = parseInt(event.pageY) - parseInt(rect.top);
+                    var pt = new Point(x,y);
+                    stompClient.send("/topic/newpoint."+id, {}, JSON.stringify(pt)); 
                 });
         }
         },
@@ -84,6 +82,11 @@ var app = (function () {
             }
             setConnected(false);
             console.log("Disconnected");
+        },
+        
+        suscribe: function (dibujo){
+            id = dibujo;
+            connectAndSubscribe();
         }
     };
 
