@@ -20,9 +20,18 @@ import org.springframework.stereotype.Controller;
 public class STOMPMessagesHandler{
         @Autowired
 	SimpMessagingTemplate msgt;
+        int cont = 0;
+        Point[] points = new Point[3];
 	@MessageMapping("/newpoint.{numdibujo}")    
 	public void handlePointEvent(Point pt,@DestinationVariable String numdibujo) throws Exception {
             System.out.println("Nuevo punto recibido en el servidor!:"+pt);
             msgt.convertAndSend("/topic/newpoint."+numdibujo, pt);
+            points[cont] = pt;
+            cont ++;
+            if (cont == 3){
+                msgt.convertAndSend("/topic/newpolygon."+numdibujo, points);
+                cont = 0;
+                points = new Point[3];
+            }
 	}
 }
