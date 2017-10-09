@@ -4,7 +4,7 @@ class Point{
 constructor(x, y){
 this.x = x;
         this.y = y;
-        }
+}
 }
 
 var stompClient = null;
@@ -42,7 +42,7 @@ var stompClient = null;
                         });
                         stompClient.subscribe('/topic/newpolygon.' + id, function (eventbody) {
                         var points = JSON.parse(eventbody.body);
-                            ctx.beginPath();
+                                ctx.beginPath();
                                 ctx.fillStyle = '#00FF00';
                                 ctx.beginPath();
                                 ctx.moveTo(points[0].x, points[0].y);
@@ -88,4 +88,4 @@ var stompClient = null;
                         connectAndSubscribe();
                 }
         };
-})();
+        })();
