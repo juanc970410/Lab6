@@ -62,11 +62,11 @@ var stompClient = null;
                 ctx = can.getContext("2d");
                 //websocket connection
                 if (window.PointerEvent) {
-        can.addEventListener("pointerdown", function(event){
-        var x = parseInt(event.pageX) - parseInt(rect.left);
-                var y = parseInt(event.pageY) - parseInt(rect.top);
-                var pt = new Point(x, y);
-                stompClient.send("/app/newpoint." + id, {}, JSON.stringify(pt));
+                    can.addEventListener("pointerdown", function(event){
+                        var x = parseInt(event.pageX) - parseInt(rect.left);
+                        var y = parseInt(event.pageY) - parseInt(rect.top);
+                        var pt = new Point(x, y);
+                        stompClient.send("/app/newpoint." + id, {}, JSON.stringify(pt));
         });
         }
         },
